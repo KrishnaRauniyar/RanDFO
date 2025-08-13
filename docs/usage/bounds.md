@@ -1,6 +1,3 @@
-
-#### `docs/usage/bounds.md`
-```md
 ---
 title: Bounds
 parent: Usage

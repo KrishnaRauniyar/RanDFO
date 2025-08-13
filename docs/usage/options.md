@@ -1,6 +1,3 @@
-
-#### `docs/usage/options.md`  ← the page you asked for
-```md
 ---
 title: Options
 parent: Usage

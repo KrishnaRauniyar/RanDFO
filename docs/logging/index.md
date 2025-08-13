@@ -1,6 +1,3 @@
-
-#### `docs/logging/index.md`
-```md
 ---
 title: Logging
 nav_order: 4

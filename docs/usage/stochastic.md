@@ -1,6 +1,3 @@
-
-#### `docs/usage/stochastic.md`
-```md
 ---
 title: Stochastic (Noisy)
 parent: Usage
