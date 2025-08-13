@@ -199,8 +199,3 @@ All logs are saved to the `logs/` directory:
 | `FrobStarSolver`         | Uses Frobenius based model                       |
 
 ---
-
-## Questions or Issues?
-
-- Submit a GitHub [Issue](https://github.com/POptUS/RanDFO/issues)
-- Start a [Discussion](https://github.com/POptUS/RanDFO/discussions)
