@@ -8,7 +8,7 @@ nav_order: 2
 
 ```python
 import numpy as np
-from core.solver import DiagHessianStarSolver
+from core.solver import DiagHessianStarSolver, FrobStarSolver
 
 def rosenbrock(x):
     return np.sum(100.0*(x[1:]-x[:-1]**2)**2 + (1-x[:-1])**2)
@@ -18,5 +18,10 @@ def rosenbrock_noisy(x):
 
 x0 = np.zeros(10)
 options = {"stochastic": True}
-solver = DiagHessianStarSolver(f=rosenbrock_noisy, x0=x0, options=options, f_true=rosenbrock)
-best = solver.solve()
+# This is for the Diagonal Hessian Modal
+diagsolver = DiagHessianStarSolver(f=rosenbrock_noisy, x0=x0, options=options, f_true=rosenbrock)
+# This is for the Frobenius Modal
+frobsolver = DiagHessianStarSolver(f=rosenbrock_noisy, x0=x0, options=options, f_true=rosenbrock)
+solution = diagsolver.solve()
+
+```

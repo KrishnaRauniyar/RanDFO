@@ -28,6 +28,13 @@ nav_order: 4
 
 ### Example
 ```python
+import numpy as np
+from core.solver import DiagHessianStarSolver, FrobStarSolver
+
+# Noise-free deterministic function
+def rosenbrock(x):
+    return np.sum(100.0 * (x[1:] - x[:-1]**2)**2 + (1 - x[:-1])**2)
+
 options = {
     "p": 2, "delta0": 1.0, "delta_max": 5.0,
     "eta1": 0.01, "eta2": 0.9, "gamma": 2.0,
@@ -35,3 +42,11 @@ options = {
     "mc_samples": 1, "parallel": False, "cpu": 1,
     "adaptive_subspace": False, "stochastic": False, "seed": 42
 }
+
+# This is for the Diagonal Hessian Modal
+diagsolver = DiagHessianStarSolver(f=rosenbrock, x0=x0, options=options)
+# This is for the Frobenius Modal
+frobsolver = FrobStarSolver(f=rosenbrock, x0=x0, options=options)
+solution = diagsolver.solve()
+
+```
