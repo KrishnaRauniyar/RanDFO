@@ -13,6 +13,6 @@ nav_external_links_new_tab: true
 
 just_the_docs:
   custom_css:
-    - assets/css/custom.css
+    - _sass/custom/custom.scss
 
 
