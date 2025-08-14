@@ -26,11 +26,15 @@ PySTARS is a Python-based implementation of STARS (Stochastic Trust-region Algor
 
 PySTARS is designed to solve general black-box optimization problems with optional bound constraints:
 
-\[
-\min_x f(x) \quad \text{s.t.} \quad l \le x \le u
-\]
+.. math::
 
-where \( f(x) \) is the **objective function**.
+   \min_{x \in \mathbb{R}^n} &\quad f(x) \\
+   \text{with} &\quad f(x) = \mathbb{E}_{\theta} \left[ f_{\theta}(x) \right],
+
+where the values of the continuously differentiable function 
+:math:`f : \mathbb{R}^n \to \mathbb{R}` are available only via 
+:math:`f_{\theta}`, a stochastically noisy version of :math:`f`, and 
+:math:`\theta` is a random variable whose distribution governs the noise.
 
 PySTARS is a **derivative-free optimization algorithm**, meaning it does not require the user to provide gradients of \( f(x) \), nor does it attempt to estimate them via finite differencing.
 
