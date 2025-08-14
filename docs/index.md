@@ -22,180 +22,51 @@ PySTARS is a Python-based implementation of STARS (Stochastic Trust-region Algor
 
 ---
 
-## Getting Started
+## When to use PySTARS
 
-### 1. Clone the Repository
+PySTARS is designed to solve general black-box optimization problems with optional bound constraints:
 
-```bash
-git clone https://github.com/POptUS/RanDFO.git
-cd RanDFO/PySTARS
-```
+\[
+\min_x f(x) \quad \text{s.t.} \quad l \le x \le u
+\]
 
----
+where \( f(x) \) is the **objective function**.
 
-### 2. Create Virtual Environment
+PySTARS is a **derivative-free optimization algorithm**, meaning it does not require the user to provide gradients of \( f(x) \), nor does it attempt to estimate them via finite differencing.
 
-```bash
-python -m venv venv
-```
+### Recommended scenarios
+- **Noisy objectives** — when repeated evaluations at the same \(x\) yield different values (e.g., Monte Carlo simulations, stochastic processes, or physical experiments).
+- **Expensive evaluations** — when calculating finite-difference gradients would require many costly evaluations.
+- **Non-smooth or inaccessible gradients** — when the function is defined by a closed-source tool, simulation, or experimental pipeline.
+- **High-dimensional problems with low effective dimension** — PySTARS can focus search in low-dimensional subspaces to improve efficiency.
 
-#### Activate the Virtual Environment
-
-- **Windows (Command Prompt):**
-  ```cmd
-  venv\Scripts\activate
-  ```
-
-- **Windows (Git Bash / PowerShell):**
-  ```bash
-  source venv/Scripts/activate
-  ```
-
-- **Linux / macOS:**
-  ```bash
-  source venv/bin/activate
-  ```
-
-#### Install the required dependencies
-
-```bash
-pip install -r requirements.txt
-```
+If accurate, inexpensive gradients are available, a derivative-based method (such as those in SciPy) is generally a better choice.
 
 ---
 
-## Usage Example
+## Details of the PySTARS Algorithm
 
-### 1. Define Objective Functions
+PySTARS is a **trust-region method** that operates in a low-dimensional random subspace of the full variable space.  
+Given a current iterate \(x_k\):
 
-```python
-import numpy as np
+1. **Subspace selection**: Choose a \(p\)-dimensional subspace \(Q_k\) (\(p \ll n\)) using one of several generator types (identity, Haar, scaled Haar, hashing-based).
+2. **Interpolation set**: Sample points around \(x_k\) within the trust-region radius \(\delta_k\) to maintain a well-spaced geometry.
+3. **Model construction**: Fit a quadratic model \(m_k(s)\) in the subspace using either a **Diagonal Hessian** or **Frobenius** model.
+4. **Step computation**: Solve the trust-region subproblem in the subspace to find a trial step \(s_k\).
+5. **Acceptance test**: Evaluate \(f(x_k + Q_k s_k)\) and compute the ratio of actual to predicted reduction.
+6. **Trust-region update**:  
+   - If the step is successful, accept it and possibly expand \(\delta_k\).  
+   - If not, reject it and shrink \(\delta_k\).
+7. **Adaptive subspace** (optional): Increase \(p\) when repeated failures occur, while reusing previous sample points.
 
-# Noise-free deterministic function
-def rosenbrock(x):
-    return np.sum(100.0 * (x[1:] - x[:-1]**2)**2 + (1 - x[:-1])**2)
+In **stochastic mode**, function evaluations are replaced by Monte Carlo averages to reduce noise effects, and the same acceptance logic is applied.
 
-# Noisy version of the same function
-def rosenbrock_noisy(x):
-    return rosenbrock(x) * (1.0 + 0.01 * np.random.randn())
-```
-
----
-
-### 2. Initial Point and Bounds
-
-```python
-x0 = np.full(10, 0.0)  # 10-dimensional input
-lower = np.full(10, -1.2)
-upper = np.full(10, 5.0)
-```
+Bound constraints are handled directly in the step computation to ensure feasibility.
 
 ---
 
-### 3. Solver Options (Default)
+## References
 
-```python
-options = {
-    "p": 2,
-    "delta0": 1.0,
-    "delta_max": 5.0,
-    "eta1": 0.01,
-    "eta2": 0.9,
-    "gamma": 2.0,
-    "r": 1.0,
-    "jlm_type": 3,                       
-    "max_eval": 1000,
-    "max_iters": 100,
-    "mc_samples": 1,              
-    "parallel": False,
-    "cpu": 1,
-    "adaptive_subspace": False,
-    "stochastic": False,                 
-    "seed": 42,
-
-    # Logging options
-    "deterministic_log": False,
-    "montecarlo_eval_log": False,
-    "montecarlo_log": False,
-    "progress_log": False,
-    "objfun_log": False,
-
-    # Terminal display
-    "track_objfun": False,
-    "track_progress": False
-}
-
-```
-
----
-
-### 4. Running the Solver
-
-#### Deterministic (Noise-Free) Mode for Diagonal Hessian and Frobenius Modal
-
-```python
-from core.solver import DiagHessianStarSolver, FrobStarSolver
-
-diagsolver = DiagHessianStarSolver(f=rosenbrock, x0=x0)
-frobsolver = FrobStarSolver(f=rosenbrock, x0=x0)
-solution = diagsolver.solve()
-```
-
-#### Deterministic (Noise-Free) Mode for Diagonal Hessian and Frobenius Modal with options and bounds
-
-```python
-from core.solver import DiagHessianStarSolver, FrobStarSolver
-
-options = {"max_eval": 100, "max_iters": 10}
-diagsolver = DiagHessianStarSolver(f=rosenbrock, x0=x0, options=options, bounds=(lower, upper))
-frobsolver = FrobStarSolver(f=rosenbrock, x0=x0, options=options, bounds=(lower, upper))
-solution = diagsolver.solve()
-```
-
-#### Stochastic (Noisy) Mode for Diagonal Hessian and Frobenius Modal with options and bounds
-
-```python
-from core.solver import DiagHessianStarSolver, FrobStarSolver
-
-options = {"stochastic": True}
-
-diagsolver = DiagHessianStarSolver(f=rosenbrock_noisy, x0=x0, bounds=(lower, upper), options=options, f_true=rosenbrock)
-frobsolver = DiagHessianStarSolver(f=rosenbrock_noisy, x0=x0, bounds=(lower, upper), options=options, f_true=rosenbrock)
-solution = diagsolver.solve()
-```
-
----
-
-## Logging Output
-
-All logs are saved to the `logs/` directory:
-
-| File                              | Description                                      |
-|-----------------------------------|--------------------------------------------------|
-| `deterministic_eval_log.csv`      | Logs evaluations for deterministic runs          |
-| `montecarlo_eval_log.csv`         | Logs sample-by-sample evaluations for MC runs    |
-| `progress_log.csv`                | Tracks trust-region size, model updates, etc.    |
-| `monte_carlo_estimates_log.csv`   | Logs mean/std of MC estimates per point          |
-| `objfun_log.txt`                  | Text log of all sampled values (detailed)        |
-
----
-
-## Console Display Options
-
-| Option            | Description                                                        |
-|-------------------|--------------------------------------------------------------------|
-| `track_objfun`    | Prints each evaluation result to terminal                          |
-| `track_progress`  | Prints each iteration’s trust region state and progress metrics    |
-
-> Only one of these can be `True` at a time to avoid output conflicts.
-
----
-
-## Available Solvers
-
-| Solver Class             | Description                                      |
-|--------------------------|--------------------------------------------------|
-| `DiagHessianStarSolver`  | Uses diagonal Hessian-based model                |
-| `FrobStarSolver`         | Uses Frobenius based model                       |
-
----
+- A. R. Conn, K. Scheinberg, L. N. Vicente, *Introduction to Derivative-Free Optimization*, SIAM, 2009.  
+- Original STARS methodology and random subspace trust-region approaches from derivative-free optimization literature.  
+- PySTARS: implementation of a **stochastic trust-region method in random subspaces** with diagonal-Hessian and Frobenius models.
