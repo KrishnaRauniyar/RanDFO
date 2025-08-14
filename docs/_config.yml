@@ -1,6 +1,10 @@
 title: PySTARS
 description: Python STARS / ANASTAARS optimization algorithms
 remote_theme: just-the-docs/just-the-docs
+markdown: kramdown
+kramdown:
+  input: GFM
+  math_engine: mathjax
 
 aux_links:
   GitHub Repo: https://github.com/KrishnaRauniyar/RanDFO
