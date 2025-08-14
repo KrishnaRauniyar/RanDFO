@@ -17,3 +17,5 @@ x0 = np.zeros(10)
 solver = DiagHessianStarSolver(f=rosenbrock, x0=x0)
 best = solver.solve()
 print(best)
+
+```
