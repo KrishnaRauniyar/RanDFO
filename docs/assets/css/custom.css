@@ -1,8 +1,0 @@
-:root {
-  --content-width: 1200px;   /* try 1100–1300px; default is ~800px */
-}
-
-/* Hide the default sidebar footer */
-.site-footer {
-  display: none;
-}
