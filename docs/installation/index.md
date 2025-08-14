@@ -63,4 +63,4 @@ You can install them all using the included **requirements.txt**:
 pip install -r requirements.txt
 ```
 
-[View requirements.txt](https://github.com/POptUS/RanDFO/blob/main/PySTARS/requirements.txt)
+[View requirements.txt](https://github.com/POptUS/RanDFO/tree/add-pystars/PySTARS/requirements.txt)
