@@ -16,11 +16,7 @@ nav_order: 4
 | `eta2` | 0.9 | Accept step threshold (high) |
 | `gamma` | 2.0 | Radius shrink/expand factor |
 | `r` | 1.0 | Model regularization / scaling (if applicable) |
-| `jlm_type` | 3 | Subspace basis type:  
-    &nbsp;&nbsp;• `2` → Identity matrix (`n == p` required)  
-    &nbsp;&nbsp;• `3` → Scaled Haar orthogonal (`√(n/p) * Q`)  
-    &nbsp;&nbsp;• `4` → Haar orthogonal (`Q`)  
-    &nbsp;&nbsp;• Other → Random hashing matrix (±1 entries, scaled by `1/√p`) |
+| `jlm_type` | 3 | Subspace basis type (identity matrix(n==p):2, Scaled Haar orthogonal(√(n/p) * Q):3, Haar orthogonal(Q):4) |
 | `max_eval` | 1000 | Max function evaluations |
 | `max_iters` | 100 | Max iterations |
 | `mc_samples` | 1 | Monte-Carlo samples per estimate |
