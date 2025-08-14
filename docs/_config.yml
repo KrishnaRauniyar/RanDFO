@@ -11,8 +11,3 @@ aux_links:
   GitHub Repo: https://github.com/KrishnaRauniyar/RanDFO
 nav_external_links_new_tab: true
 
-just_the_docs:
-  custom_css:
-    - _sass/custom/custom.scss
-
-

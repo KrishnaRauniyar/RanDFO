@@ -1,10 +1,8 @@
-/* Hide the default footer that appears at the bottom of the left sidebar */
-.side-bar .site-footer { 
-  display: none !important; 
-}
+/* Hide the default sidebar footer */
+.side-bar .site-footer { display: none !important; }
 
-/* Make the main content area wider and the sidebar a bit narrower */
+/* Widen content / adjust sidebar width */
 :root {
-  --content-width: 1200px;   /* try 1100–1300px; default is ~800px */
-  --nav-width: 240px;        /* default is ~300px; adjust to taste */
+  --content-width: 1200px;  /* try 1100–1300px */
+  --nav-width: 240px;       /* default ~300px */
 }
