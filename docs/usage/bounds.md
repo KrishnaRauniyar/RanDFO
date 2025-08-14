@@ -15,7 +15,6 @@ lower  = np.full(10, -1.2)
 upper  = np.full(10,  5.0)
 options = {"max_eval": 100, "max_iters": 10}
 
-
 # This is for the Diagonal Hessian Modal
 diagsolver = DiagHessianStarSolver(f=rosenbrock, x0=x0, options=options, bounds=(lower, upper))
 # This is for the Frobenius Modal

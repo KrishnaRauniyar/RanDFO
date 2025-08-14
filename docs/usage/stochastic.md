@@ -21,7 +21,7 @@ options = {"stochastic": True}
 # This is for the Diagonal Hessian Modal
 diagsolver = DiagHessianStarSolver(f=rosenbrock_noisy, x0=x0, options=options, f_true=rosenbrock)
 # This is for the Frobenius Modal
-frobsolver = DiagHessianStarSolver(f=rosenbrock_noisy, x0=x0, options=options, f_true=rosenbrock)
+frobsolver = FrobStarSolver(f=rosenbrock_noisy, x0=x0, options=options, f_true=rosenbrock)
 solution = diagsolver.solve()
 
 ```
